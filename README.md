@@ -1,7 +1,9 @@
 # rxjs  
 
-함수형 프로그래밍을 위한 코드들.  
-custom funtion, rambda 예시, lodash 예시로 구성 
+## 함수형 프로그래밍을 위한 코드들.  
+custom funtion => 📁 _fxjs 폴더  
+rambda => 📁 _rambda 폴더  
+lodash => 📁 _lodash 폴더  
 
 
 ## inspired by
