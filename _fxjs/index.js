@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
+// 일단, a가 존재하고(null 같은 값 걸러야 하니), Symbol.iterator 메서드가 있어야 함.
 export const isIterable = a => a && a[Symbol.iterator];
 
 //** currify, multipleCurrify */
@@ -114,11 +115,27 @@ L.filter = currify(function* (f, iter) {
   }
 });
 
+//** lazy utils */
 L.entries = function* (obj) {
   for (const key in obj) yield [key, obj[key]];
 };
 
-//** utils */
+// iterable 안의 값도 iterable이면 펼쳐내는 작업. 단, depth가 1인 경우만 됨
+L.flatten = function* (iter) {
+  for (const a of iter) {
+    if (isIterable(iter)) yield* a;
+    else yield a;
+  }
+};
+
+L.deepFlatten = function* f(iter) {
+  for (const a of iter) {
+    if (isIterable(a)) yield* f(a);
+    else yield a;
+  }
+};
+
+//** improved utils */
 // ([a]) => a는 뭐냐면, 배열을 깨서 값만 전달하도록 함
 // L.filter와 그냥 filter의 차이에 유의할 것.
 export const find = (f, iter) => go(iter, L.filter(f), take(1), ([a]) => a);
