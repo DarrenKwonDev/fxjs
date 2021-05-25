@@ -1,4 +1,5 @@
-import { filter, go, map, pipe, reduce, oldPipe, currify } from './_fxjs';
+import { filter, go, map, pipe, reduce, oldPipe, currify, range, take } from './_fxjs';
+import { L } from './_fxjs';
 
 const products = [
   { name: '반팔티', price: 15000, quantity: 1 },
@@ -51,3 +52,16 @@ const products = [
 //   reduce((acc, cur) => acc + cur),
 //   console.log
 // );
+
+// let list = L.range(10);
+// reduce가 iterable을 받기 때문에 적용 가능한 것.
+// console.log(reduce((acc, cur) => acc + cur, list));
+
+// console.time('eager');
+// console.log(take(3, range(100000)));
+// console.timeEnd('eager');
+// console.time('lazy');
+// console.log(take(3, L.range(100000)));
+// console.timeEnd('lazy');
+
+console.log(take(5, L.range(Infinity)));

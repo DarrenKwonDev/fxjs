@@ -53,4 +53,31 @@ export const oldPipe = (...fs) => a => go(a, ...fs);
 // 첫 함수에 커링으로 전달된 변수 적용한 후 순차적으로 함수 연속 실행
 export const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs);
 
-// lazy
+//** util 함수 */
+export const range = l => {
+  let i = -1;
+  let arr = [];
+  while (++i < l) {
+    arr.push(i);
+  }
+  return arr;
+};
+
+export const take = (l, iter) => {
+  let res = [];
+  for (const a of iter) {
+    res.push(a);
+    if (res.length == l) {
+      return res;
+    }
+  }
+};
+
+//** Lazy */
+export const L = {};
+L.range = function* (l) {
+  let i = -1;
+  while (++i < l) {
+    yield i;
+  }
+};
