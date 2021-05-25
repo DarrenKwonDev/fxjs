@@ -107,3 +107,13 @@ const products = [
 // console.log(queryStrMaker({ limit: 10, offset: 10, type: 'notice' }));
 
 // console.log(find(a => a.age < 30, users));
+
+// go(list, L.flatMap(map(a => a * a)), take(Infinity), console.log);
+
+// const list = [
+//     [1, 2],
+//     [3, 4],
+//     [5, 6, [7, [8, 9]]],
+//   ];
+
+//   console.log([...L.deepFlatten(list)]);

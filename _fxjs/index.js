@@ -135,6 +135,8 @@ L.deepFlatten = function* f(iter) {
   }
 };
 
+L.flatMap = currify(pipe(L.map, L.flatten));
+
 //** improved utils */
 // ([a]) => a는 뭐냐면, 배열을 깨서 값만 전달하도록 함
 // L.filter와 그냥 filter의 차이에 유의할 것.
