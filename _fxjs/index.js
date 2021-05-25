@@ -63,17 +63,35 @@ export const range = l => {
   return arr;
 };
 
-export const take = (l, iter) => {
+export const take = currify((l, iter) => {
+  if (!isIterable(iter)) throw Error('not iterable');
+
   let res = [];
-  for (const a of iter) {
+  let cur;
+  iter = iter[Symbol.iterator](); // iterable에서 iterator로
+
+  // iter.next().done이 아닐때까지.  + cur 변수에 iter.next() 담기
+  while (!(cur = iter.next()).done) {
+    const a = cur.value;
     res.push(a);
-    if (res.length == l) {
-      return res;
-    }
+    if (res.length == l) return res;
   }
-};
+  return res;
+});
+
+export const join = currify((sep, iter) => {
+  if (!isIterable(iter)) throw Error('not iterable');
+  return reduce((acc, cur) => `${acc}${sep}${cur}`, iter);
+});
+
+export const takeAll = take(Infinity);
 
 //** Lazy */
+// map, filter와 같이 변환적인 함수는 지연 평가가 가능하다.
+// 그러나 결과를 만드는 함수인 take나 reduce는 지연 평가가 불가능하다.
+// map, filter를 반복하다가 reduce를 통해서 값을 도출하겠다.
+// L을 썼다면 take나 reduce를 통해서 갯수를 제한해야 결과물을 냄.
+// 이런 flow로 함수형 프로그래밍을 써야 한다고 머릿속에 있어야 함.
 export const L = {};
 L.range = function* (l) {
   let i = -1;
@@ -81,3 +99,28 @@ L.range = function* (l) {
     yield i;
   }
 };
+
+L.map = currify(function* (f, iter) {
+  if (!isIterable(iter)) throw Error('not iterable');
+  for (const value of iter) {
+    yield f(value);
+  }
+});
+
+L.filter = currify(function* (f, iter) {
+  if (!isIterable(iter)) throw Error('not iterable');
+  for (const value of iter) {
+    if (f(value)) yield value;
+  }
+});
+
+L.entries = function* (obj) {
+  for (const key in obj) yield [key, obj[key]];
+};
+
+//** utils */
+// ([a]) => a는 뭐냐면, 배열을 깨서 값만 전달하도록 함
+// L.filter와 그냥 filter의 차이에 유의할 것.
+export const find = (f, iter) => go(iter, L.filter(f), take(1), ([a]) => a);
+export const impMap = currify(pipe(L.map, takeAll));
+export const impFilter = currify(pipe(L.filter, takeAll));
